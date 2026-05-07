@@ -32,8 +32,19 @@ project/
 │  └─ Models.py
 ├─ weights/
 │  ├─ damage/
+│  │  ├─ [DAMAGE][Scratch_0]Unet.pt
+│  │  ├─ [DAMAGE][Separated_1]Unet.pt
+│  │  ├─ [DAMAGE][Crushed_2]Unet.pt
+│  │  └─ [DAMAGE][Breakage_3]Unet.pt
 │  ├─ part/
+│  │  └─ [PART]Unet.pt
 │  └─ estimate/
+│     ├─ pure_labor_regressor.cbm
+│     ├─ paint_classifier.cbm
+│     ├─ paint_regressor.cbm
+│     ├─ part_classifier.cbm
+│     ├─ part_regressor.cbm
+│     └─ used_features_3models.csv
 ├─ static/
 │  └─ results/
 ├─ requirements.txt
@@ -213,8 +224,19 @@ project/
 │  └─ Models.py
 ├─ weights/
 │  ├─ damage/
+│  │  ├─ [DAMAGE][Scratch_0]Unet.pt
+│  │  ├─ [DAMAGE][Separated_1]Unet.pt
+│  │  ├─ [DAMAGE][Crushed_2]Unet.pt
+│  │  └─ [DAMAGE][Breakage_3]Unet.pt
 │  ├─ part/
+│  │  └─ [PART]Unet.pt
 │  └─ estimate/
+│     ├─ pure_labor_regressor.cbm
+│     ├─ paint_classifier.cbm
+│     ├─ paint_regressor.cbm
+│     ├─ part_classifier.cbm
+│     ├─ part_regressor.cbm
+│     └─ used_features_3models.csv
 ├─ static/
 │  └─ results/
 ├─ requirements.txt
