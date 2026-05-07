@@ -31,3 +31,9 @@ static/results/
 
 # cache
 .cache/
+
+# torch cache
+*.pth.tar
+
+# env
+.env
