@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+
+# venv
+venv/
+.venv/
+
+# VSCode
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# logs
+*.log
+
+# temp
+temp/
+
+# static result images
+static/results/
+
+# large model weights
+*.pt
+*.pth
+*.cbm
+
+# cache
+.cache/
