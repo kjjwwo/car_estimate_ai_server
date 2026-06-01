@@ -55,7 +55,7 @@ project/
 
 ## 3. 개발 환경 및 요구 사항 (Requirements)
 
-* Python 3.11+
+* Python 3.13+
 * CUDA 지원 GPU 권장
 * PyTorch
 * FastAPI
