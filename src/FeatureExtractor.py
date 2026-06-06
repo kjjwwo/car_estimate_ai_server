@@ -158,6 +158,14 @@ class FeatureAggregator:
             "glass_and_light_damage_ratio",
             "wheels_damage_ratio"
         ]
+        #add
+        self.part_damage_image_keys = [
+            "bumper_damage_image_ratio",
+            "body_panel_top_damage_image_ratio",
+            "side_panel_damage_image_ratio",
+            "glass_and_light_damage_image_ratio",
+            "wheels_damage_image_ratio",
+        ]
         self.part_area_keys = [
             "bumper_area_ratio",
             "body_panel_top_area_ratio",
@@ -208,7 +216,9 @@ class FeatureAggregator:
                     values.append(0.0)
 
             if self._is_damage_area_feature(key):
-                aggregated[f"{key}_sum"] = float(np.sum(values))
+                aggregated[f"{key}_max"] = float(np.max(values))
+            elif self._is_part_damage_image_feature(key):
+                aggregated[f"{key}_max"] = float(np.max(values))
             elif self._is_part_damage_feature(key):
                 aggregated[f"{key}_max"] = float(np.max(values))
             elif self._is_overlap_feature(key):
@@ -219,6 +229,20 @@ class FeatureAggregator:
         # bumper_damage_ratio_max
         # scratched_bumper_overlap_ratio_max
         # total_damage_area_ratio_sum
+    # 부위별 전체 이미지 기준 손상 비율 max를 이용해 최종 total damage 계산
+        aggregated["total_damage_area_ratio_sum"] = float(
+            min(
+                1.0,
+                sum(
+                    aggregated.get(f"{key}_max", 0.0)
+                    for key in self.part_damage_image_keys
+                )
+            )
+        )
+
+        # 기존 EstimateModel 입력 feature 이름 호환을 위해 damage type ratio도 _sum 이름으로 유지
+        for key in self.damage_type_keys:
+            aggregated[f"{key}_sum"] = aggregated.get(f"{key}_max", 0.0)
 
         # 3. categorical representative feature
         aggregated["main_damage_type"] = self._majority_vote(
@@ -256,8 +280,8 @@ class FeatureAggregator:
             return True
         if key in self.part_area_keys:
             return True
-        if key.endswith("_damage_image_ratio"):
-            return True
+        #if key.endswith("_damage_image_ratio"):
+        #    return True
         if key in ["car_size"]:
             return True
         return False
@@ -267,6 +291,9 @@ class FeatureAggregator:
 
     def _is_part_damage_feature(self, key):
         return key in self.part_damage_keys
+    
+    def _is_part_damage_image_feature(self, key):
+        return key in self.part_damage_image_keys   
 
     def _is_overlap_feature(self, key):
         return key.endswith("_overlap_ratio")

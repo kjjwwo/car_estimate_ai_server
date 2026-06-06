@@ -4,6 +4,7 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+from typing import Optional
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -38,7 +39,7 @@ damage_predictor = DamagePredictor(
 
 # Extract part mask
 part_predictor =PartPredictor(
-    weight_path="weights/part/[Part]Unet.pt",
+    weight_path="weights/part/[PART]Unet.pt",
     size=256
 )
 # Extract features
@@ -132,5 +133,86 @@ async def predict_estimate(
             content={
                 "success": False,
                 "error":str(e)
+            }
+        )
+    
+@app.post("/predict-estimate-multi")
+async def predict_estimate_multi(
+    image1: UploadFile = File(...),
+    image2: Optional[UploadFile] = File(None),
+    image3: Optional[UploadFile] = File(None),
+    image4: Optional[UploadFile] = File(None),
+    manufacturer: str = Form("Unknown"),
+    car_size: int = Form(0),
+):
+    try:
+        images = [img for img in [image1, image2, image3, image4] if img is not None]
+
+        if len(images) == 0:
+            raise ValueError("At least one image is required")
+
+        car_info = {
+            "manufacturer": manufacturer,
+            "car_size": car_size
+        }
+
+        image_features_list = []
+        overlay_images = []
+
+        for image in images:
+            file_bytes = await image.read()
+            image_bgr = read_upload_image(file_bytes)
+
+            damage_masks = damage_predictor.predict(image_bgr)
+            part_mask = part_predictor.predict(image_bgr)
+
+            overlay_filename, overlay_path = save_overlay_image(
+                image_bgr=image_bgr,
+                damage_masks=damage_masks,
+                part_mask=part_mask,
+                output_dir=str(RESULT_DIR)
+            )
+
+            overlay_url = f"/static/results/{overlay_filename}"
+
+            image_features = feature_extractor.extract(
+                damage_masks=damage_masks,
+                part_mask=part_mask,
+                car_info=car_info
+            )
+
+            image_features_list.append(image_features)
+
+            overlay_images.append({
+                "filename": image.filename,
+                "overlay_image_url": overlay_url,
+                "main_damage_type": image_features.get("main_damage_type"),
+                "main_damaged_part": image_features.get("main_damaged_part"),
+                "total_damage_area_ratio": image_features.get("total_damage_area_ratio"),
+            })
+
+        features = feature_aggregator.aggregate(image_features_list)
+        estimate = estimate_model.predict(features)
+
+        return {
+            "success": True,
+            "num_images": len(images),
+            "estimate": estimate,
+            "summary": {
+                "main_damage_type": features.get("main_damage_type"),
+                "main_damaged_part": features.get("main_damaged_part"),
+                "total_damage_area_ratio": features.get("total_damage_area_ratio_sum"),
+            },
+            "overlay_images": overlay_images,
+            "features": features,
+        }
+
+    except Exception as e:
+        traceback.print_exc()
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "error": str(e)
             }
         )
