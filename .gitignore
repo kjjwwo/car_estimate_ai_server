@@ -37,3 +37,9 @@ static/results/
 
 # env
 .env
+
+# zip
+*.zip
+
+# weights/estimate/old
+weights/estimate/old
