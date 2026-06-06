@@ -32,8 +32,19 @@ project/
 │  └─ Models.py
 ├─ weights/
 │  ├─ damage/
+│  │  ├─ [DAMAGE][Scratch_0]Unet.pt
+│  │  ├─ [DAMAGE][Separated_1]Unet.pt
+│  │  ├─ [DAMAGE][Crushed_2]Unet.pt
+│  │  └─ [DAMAGE][Breakage_3]Unet.pt
 │  ├─ part/
+│  │  └─ [PART]Unet.pt
 │  └─ estimate/
+│     ├─ pure_labor_regressor.cbm
+│     ├─ paint_classifier.cbm
+│     ├─ paint_regressor.cbm
+│     ├─ part_classifier.cbm
+│     ├─ part_regressor.cbm
+│     └─ used_features_3models.csv
 ├─ static/
 │  └─ results/
 ├─ requirements.txt
@@ -44,7 +55,7 @@ project/
 
 ## 3. 개발 환경 및 요구 사항 (Requirements)
 
-* Python 3.11+
+* Python 3.13+
 * CUDA 지원 GPU 권장
 * PyTorch
 * FastAPI
@@ -171,15 +182,14 @@ multipart/form-data
 
 ## 10. 현재 한계점 (Current Limitations)
 
-* Glass & Light 클래스의 segmentation 성능이 상대적으로 낮습니다.
+* Glass & Light 클래스 및 전반적인 segmentation 성능이 상대적으로 낮습니다.
 * 견적 결과는 AI 예측값이며 실제 정비 견적과 차이가 발생할 수 있습니다.
 * 현재 단일 이미지 추론만 지원합니다.
 * 여러 이미지 기반 aggregation 기능은 추후 확장 예정입니다.
 
-```text
-아래는 영문 버전 README.md 입니다.
-
-```
+---
+## 아래는 영문 버전 README.md 입니다.
+---
 
 
 # Car Damage Estimate AI Server
@@ -214,8 +224,19 @@ project/
 │  └─ Models.py
 ├─ weights/
 │  ├─ damage/
+│  │  ├─ [DAMAGE][Scratch_0]Unet.pt
+│  │  ├─ [DAMAGE][Separated_1]Unet.pt
+│  │  ├─ [DAMAGE][Crushed_2]Unet.pt
+│  │  └─ [DAMAGE][Breakage_3]Unet.pt
 │  ├─ part/
+│  │  └─ [PART]Unet.pt
 │  └─ estimate/
+│     ├─ pure_labor_regressor.cbm
+│     ├─ paint_classifier.cbm
+│     ├─ paint_regressor.cbm
+│     ├─ part_classifier.cbm
+│     ├─ part_regressor.cbm
+│     └─ used_features_3models.csv
 ├─ static/
 │  └─ results/
 ├─ requirements.txt
